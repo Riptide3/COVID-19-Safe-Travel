@@ -14,27 +14,27 @@ class Traveler:
         self.risk, self.route = self.get_plan()
         self.states = self.construct_state()
 
+    # 获取系统规划出的旅行路线
     def get_plan(self):
         route_schedule = schedule.Schedule(self.origin, self.destination, self.departure_time, self.time_limit)
         risk, route = route_schedule.get_schedule()
         return risk, route
 
+    # 构造旅客全程的状态表
     def construct_state(self):
-        count = 0
         states = []
         for road in self.route[1:]:
             dt = road['departure_time']
             at = road['arrival_time']
             if at >= dt:
-                for i in range(count, count+at-dt):
+                for i in range(0, at-dt):
                     states.append(road)
-                count += at - dt
             else:
-                for i in range(count, count+at+(24-dt)):
+                for i in range(0, at+(24-dt)):
                     states.append(road)
-                count += at + (24 - dt)
         return states
 
+    # 获取旅客当前状态
     def get_state(self, n):
         return self.states[n]
 

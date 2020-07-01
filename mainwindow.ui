@@ -77,7 +77,7 @@ QTabBar::tab{height:40}</string>
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QLineEdit" name="nameLineEdit">
+          <widget class="QLineEdit" name="idLineEdit1">
            <property name="font">
             <font>
              <family>新宋体</family>
@@ -87,7 +87,7 @@ QTabBar::tab{height:40}</string>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLineEdit" name="idLineEdit1">
+          <widget class="QLineEdit" name="nameLineEdit">
            <property name="font">
             <font>
              <family>新宋体</family>
@@ -525,6 +525,25 @@ QTabBar::tab{height:40}</string>
         </property>
         <property name="text">
          <string>限时最少风险</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="timeLabel">
+        <property name="geometry">
+         <rect>
+          <x>680</x>
+          <y>20</y>
+          <width>72</width>
+          <height>15</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>新宋体</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
         </property>
        </widget>
       </widget>

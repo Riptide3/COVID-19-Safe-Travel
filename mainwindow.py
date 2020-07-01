@@ -10,7 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import simulator
 import datetime
-
+import threading
 
 class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
@@ -24,6 +24,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 class Ui_MainWindow(object):
     def __init__(self):
+        self.update_timer = None
         self.sim = simulator.Simulator()
         self.sim.forever()
 
@@ -68,20 +69,20 @@ class Ui_MainWindow(object):
         self.idLabel1.setFont(font)
         self.idLabel1.setObjectName("idLabel1")
         self.travelerGridLayout.addWidget(self.idLabel1, 3, 0, 1, 1)
-        self.nameLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget)
-        font = QtGui.QFont()
-        font.setFamily("新宋体")
-        font.setPointSize(10)
-        self.nameLineEdit.setFont(font)
-        self.nameLineEdit.setObjectName("nameLineEdit")
-        self.travelerGridLayout.addWidget(self.nameLineEdit, 3, 1, 1, 1)
         self.idLineEdit1 = QtWidgets.QLineEdit(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setFamily("新宋体")
         font.setPointSize(10)
         self.idLineEdit1.setFont(font)
         self.idLineEdit1.setObjectName("idLineEdit1")
-        self.travelerGridLayout.addWidget(self.idLineEdit1, 1, 1, 1, 1)
+        self.travelerGridLayout.addWidget(self.idLineEdit1, 3, 1, 1, 1)
+        self.nameLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget)
+        font = QtGui.QFont()
+        font.setFamily("新宋体")
+        font.setPointSize(10)
+        self.nameLineEdit.setFont(font)
+        self.nameLineEdit.setObjectName("nameLineEdit")
+        self.travelerGridLayout.addWidget(self.nameLineEdit, 1, 1, 1, 1)
         self.infoLabel = QtWidgets.QLabel(self.gridLayoutWidget)
         font = QtGui.QFont()
         font.setFamily("新宋体")
@@ -229,6 +230,14 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.strategyRadioButton2.setFont(font)
         self.strategyRadioButton2.setObjectName("strategyRadioButton2")
+        self.timeLabel = QtWidgets.QLabel(self.main)
+        self.timeLabel.setGeometry(QtCore.QRect(430, 20, 181, 21))
+        font = QtGui.QFont()
+        font.setFamily("新宋体")
+        font.setPointSize(12)
+        self.timeLabel.setFont(font)
+        self.timeLabel.setObjectName("timeLabel")
+        self.timeLabel.setText(self.sim.timer.time_now.strftime("%Y-%m-%d %H")+"时")
         self.tabWidget.addTab(self.main, "")
         self.log = QtWidgets.QWidget()
         self.log.setObjectName("log")
@@ -352,6 +361,7 @@ class Ui_MainWindow(object):
         self.routeLabel.setText(_translate("MainWindow", "旅行路线"))
         self.strategyRadioButton1.setText(_translate("MainWindow", "最少风险"))
         self.strategyRadioButton2.setText(_translate("MainWindow", "限时最少风险"))
+        self.timeLabel.setText(_translate("MainWindow", "TextLabel"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main), _translate("MainWindow", "模拟旅行"))
         self.logLabel.setText(_translate("MainWindow", "系统日志"))
         self.stateSearchLabel.setText(_translate("MainWindow", "旅客状态查询"))
@@ -359,6 +369,22 @@ class Ui_MainWindow(object):
         self.stateSearchButton.setText(_translate("MainWindow", "开始查询"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.log), _translate("MainWindow", "日志"))
 
+    # 显示全局时间
+    def _update_timeLabel(self):
+        self.timeLabel.setText(self.sim.timer.time_now.strftime("%Y-%m-%d %H")+"时")
+        self.update_timer = threading.Timer(10, self._update_timeLabel)
+        self.update_timer.start()
+
+    def update_timeLabel(self):
+        self.timeLabel.setText(self.sim.timer.time_now.strftime("%Y-%m-%d %H")+"时")
+        self.update_timer = threading.Timer(10, self._update_timeLabel)
+        self.update_timer.start()
+
+    def end(self):
+        self.sim.end()
+        self.update_timer.cancel()
+
+    # 显示系统为旅客规划的路线
     def show_route(self, name, ID):
         d_date, risk, route = self.sim.get_plan(ID)
         text = ''
@@ -390,6 +416,7 @@ class Ui_MainWindow(object):
         self.routeTextBrowser.setText(text)
 
     def startButton_clicked(self):
+        self.end()
         name = self.nameLineEdit.text()
         ID = self.idLineEdit1.text()
         if name == '' or ID == '':
@@ -405,12 +432,16 @@ class Ui_MainWindow(object):
             if limit:
                 time_limit = int(self.daySpin.text()[:-1]) * 24 + int(self.hourSpin.text()[:-1])
             else:
-                time_limit = 4 * 24  # TODO: 修改此处
-            traveler = {'name': name, 'ID': ID, 'origin': origin, 'destination': destination, 'time_limit': time_limit}
+                time_limit = 4 * 24  # TODO: 修改此处更改默认限时
+            traveler = {'name': name, 'ID': ID, 'origin': origin, 'destination': destination,
+                        'departure_date': self.sim.timer.time_now, 'time_limit': time_limit}
             self.nameLineEdit.clear()
             self.idLineEdit1.clear()
             self.sim.new_traveler(traveler)
             self.show_route(name, ID)
+        self.update_timeLabel()
+        self.sim.forever()
+        self.sim.timer.start()
 
     def stateSearchButton_clicked(self):
         ID = self.stateSearchIDLineEdit.text()
@@ -425,7 +456,7 @@ class Ui_MainWindow(object):
             self.stateSearchTextBrowser.setFont(font)
             E2C = {'BUS': '汽车', 'TRAIN': '火车', 'AIRPLANE': '飞机'}
             if state['type'] == 'STAY':
-                text = f"旅客停留在{state['origin']}\n"
+                text = f"旅客当前停留在{state['origin']}\n"
             else:
-                text = f"旅客处于{state['origin']}前往{state['destination']}的{E2C[state['type']]}上\n"
+                text = f"旅客当前处于{state['origin']}前往{state['destination']}的{E2C[state['type']]}上\n"
             self.stateSearchTextBrowser.setText(text)
