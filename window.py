@@ -7,7 +7,7 @@ if __name__ == '__main__':
     MainWindow = mainwindow.MainWindow()
     ui = mainwindow.Ui_MainWindow()
     ui.setupUi(MainWindow)
-    ui.update_timeLabel()
+    # ui.update_timeLabel()
     MainWindow.show()
 
 sys.exit(app.exec_())

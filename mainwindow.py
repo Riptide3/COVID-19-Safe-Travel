@@ -10,7 +10,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import simulator
 import datetime
-import threading
 
 class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
@@ -26,7 +25,7 @@ class Ui_MainWindow(object):
     def __init__(self):
         self.update_timer = None
         self.sim = simulator.Simulator()
-        self.sim.forever()
+        self.init_timer()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -237,7 +236,6 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.timeLabel.setFont(font)
         self.timeLabel.setObjectName("timeLabel")
-        self.timeLabel.setText(self.sim.timer.time_now.strftime("%Y-%m-%d %H")+"时")
         self.tabWidget.addTab(self.main, "")
         self.log = QtWidgets.QWidget()
         self.log.setObjectName("log")
@@ -361,7 +359,7 @@ class Ui_MainWindow(object):
         self.routeLabel.setText(_translate("MainWindow", "旅行路线"))
         self.strategyRadioButton1.setText(_translate("MainWindow", "最少风险"))
         self.strategyRadioButton2.setText(_translate("MainWindow", "限时最少风险"))
-        self.timeLabel.setText(_translate("MainWindow", "TextLabel"))
+        self.timeLabel.setText(_translate("MainWindow", self.time_now.strftime("%Y-%m-%d %H")+"时"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main), _translate("MainWindow", "模拟旅行"))
         self.logLabel.setText(_translate("MainWindow", "系统日志"))
         self.stateSearchLabel.setText(_translate("MainWindow", "旅客状态查询"))
@@ -369,20 +367,24 @@ class Ui_MainWindow(object):
         self.stateSearchButton.setText(_translate("MainWindow", "开始查询"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.log), _translate("MainWindow", "日志"))
 
-    # 显示全局时间
-    def _update_timeLabel(self):
-        self.timeLabel.setText(self.sim.timer.time_now.strftime("%Y-%m-%d %H")+"时")
-        self.update_timer = threading.Timer(10, self._update_timeLabel)
-        self.update_timer.start()
+    def init_timer(self):
+        self.time_now = datetime.datetime.now()
+        self.one_hour = datetime.timedelta(hours=1)
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.timed_tasks)
+        self.timer.setInterval(10 * 1000)
+        self.timer.start()
 
-    def update_timeLabel(self):
-        self.timeLabel.setText(self.sim.timer.time_now.strftime("%Y-%m-%d %H")+"时")
-        self.update_timer = threading.Timer(10, self._update_timeLabel)
-        self.update_timer.start()
+    def timed_tasks(self):
+        self.time_now += self.one_hour
+        self.timeLabel.setText(self.time_now.strftime("%Y-%m-%d %H")+"时")
+        self.sim.get_all_state(self.time_now)
 
-    def end(self):
-        self.sim.end()
-        self.update_timer.cancel()
+    def one_time_tasks(self):
+        self.time_now += self.one_hour
+        self.timeLabel.setText(self.time_now.strftime("%Y-%m-%d %H")+"时")
+        self.sim.get_all_state(self.time_now)
+        self.timer.start()
 
     # 显示系统为旅客规划的路线
     def show_route(self, name, ID):
@@ -416,7 +418,8 @@ class Ui_MainWindow(object):
         self.routeTextBrowser.setText(text)
 
     def startButton_clicked(self):
-        self.end()
+        remainingTime = self.timer.remainingTime()
+        self.timer.stop()
         name = self.nameLineEdit.text()
         ID = self.idLineEdit1.text()
         if name == '' or ID == '':
@@ -434,14 +437,13 @@ class Ui_MainWindow(object):
             else:
                 time_limit = 4 * 24  # TODO: 修改此处更改默认限时
             traveler = {'name': name, 'ID': ID, 'origin': origin, 'destination': destination,
-                        'departure_date': self.sim.timer.time_now, 'time_limit': time_limit}
+                        'departure_date': self.time_now, 'time_limit': time_limit}
             self.nameLineEdit.clear()
             self.idLineEdit1.clear()
             self.sim.new_traveler(traveler)
             self.show_route(name, ID)
-        self.update_timeLabel()
-        self.sim.forever()
-        self.sim.timer.start()
+        print(f'{name}: {self.sim.get_state(ID, self.time_now)}')
+        self.timer.singleShot(remainingTime, self.one_time_tasks)
 
     def stateSearchButton_clicked(self):
         ID = self.stateSearchIDLineEdit.text()
@@ -449,7 +451,7 @@ class Ui_MainWindow(object):
             QtWidgets.QMessageBox.warning(self.centralwidget, '注意', '身份证号不能为空！',
                                           QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
         else:
-            state = self.sim.get_state(ID)
+            state = self.sim.get_state(ID, self.time_now)
             font = QtGui.QFont()
             font.setFamily("新宋体")
             font.setPointSize(12)

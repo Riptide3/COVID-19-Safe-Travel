@@ -12,11 +12,13 @@ class Timer:
         self.time_now += self.one_hour
 
     def _forever(self):
+        print("计时")
         self.add()
         self.timer = threading.Timer(10, self._forever)
         self.timer.start()
 
     def start(self):
+        print("重新计时")
         self.timer = threading.Timer(10, self._forever)
         self.timer.start()
 
