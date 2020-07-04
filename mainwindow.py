@@ -367,6 +367,7 @@ class Ui_MainWindow(object):
         self.stateSearchButton.setText(_translate("MainWindow", "开始查询"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.log), _translate("MainWindow", "日志"))
 
+    # 定时器初始化
     def init_timer(self):
         self.time_now = datetime.datetime.now()
         self.one_hour = datetime.timedelta(hours=1)
@@ -375,6 +376,7 @@ class Ui_MainWindow(object):
         self.timer.setInterval(10 * 1000)
         self.timer.start()
 
+    # 定时任务
     def timed_tasks(self):
         self.time_now += self.one_hour
         self.timeLabel.setText(self.time_now.strftime("%Y-%m-%d %H")+"时")
@@ -417,6 +419,7 @@ class Ui_MainWindow(object):
         self.routeTextBrowser.setFont(font)
         self.routeTextBrowser.setText(text)
 
+    # 开始规划按钮被点击
     def startButton_clicked(self):
         remainingTime = self.timer.remainingTime()
         self.timer.stop()
@@ -445,7 +448,10 @@ class Ui_MainWindow(object):
         print(f'{name}: {self.sim.get_state(ID, self.time_now)}')
         self.timer.singleShot(remainingTime, self.one_time_tasks)
 
+    # 获取某一旅客状态的按钮被点击
     def stateSearchButton_clicked(self):
+        remainingTime = self.timer.remainingTime()
+        self.timer.stop()
         ID = self.stateSearchIDLineEdit.text()
         if ID == '':
             QtWidgets.QMessageBox.warning(self.centralwidget, '注意', '身份证号不能为空！',
@@ -462,3 +468,4 @@ class Ui_MainWindow(object):
             else:
                 text = f"旅客当前处于{state['origin']}前往{state['destination']}的{E2C[state['type']]}上\n"
             self.stateSearchTextBrowser.setText(text)
+            self.timer.singleShot(remainingTime, self.timer.start)

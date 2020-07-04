@@ -24,6 +24,7 @@ class Schedule:
         self.inf = 999
         self.graph = self.construct_graph(self.departure_time, self.time_limit)
 
+    # 构造线路图
     def construct_graph(self, departure_time, time_limit):
         graph = {}
         time_limit = time_limit * 24
@@ -61,7 +62,8 @@ class Schedule:
             graph.update({vertex_j: {vertex_j: edge}})
         return graph
 
-    def dijkstra(self, graph, start):  # dijkstra算法
+    # 使用带堆优化的dijkstra算法求解路径
+    def dijkstra(self, graph, start):
         dis = dict((key, self.inf) for key in graph)  # start到每个点的距离
         dis[start] = 0
         vis = dict((key, False) for key in graph)  # 是否访问过，1位访问过，0为未访问
@@ -91,6 +93,7 @@ class Schedule:
         print('Dijkstra算法所用时间:', t_end - t_start)
         return dis, path
 
+    # 获取风险值和路径
     def get_schedule(self):
         distance, path = self.dijkstra(self.graph, self.origin)
         dists = []
@@ -103,18 +106,4 @@ class Schedule:
         else:
             min_risk = round(distance[self.destination + '_' + str(dists.index(min(dists)))], 1)
             min_risk_route = path[self.destination + '_' + str(dists.index(min(dists)))]
-        # for route in path[self.destination + '_' + str(dists.index(min(dists)))]:
-        #     if route['origin'] == route['destination']:
-        #         continue
-        #     else:
-        #         min_risk_route.append(route)
-
         return min_risk, min_risk_route
-
-
-if __name__ == '__main__':
-    travel_schedule = Schedule('北京', '成都', 8, 50)
-    mr, mrr = travel_schedule.get_schedule()
-#     for route in mrr:
-#         print(str(route['departure_time']) + '--' + str(route['arrival_time']) + '\t' +
-#               route['origin'] + '--->' + route['destination'] + '\t' + route['type'])

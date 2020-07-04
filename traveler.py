@@ -37,7 +37,3 @@ class Traveler:
     # 获取旅客当前状态
     def get_state(self, n):
         return self.states[n]
-
-
-if __name__ == '__main__':
-    t = Traveler('yzy', 123456, '北京', '成都', 8, 50)
