@@ -399,6 +399,7 @@ class Ui_MainWindow(object):
         self.strategyRadioButton2.setText(_translate("MainWindow", "限时最少风险"))
         self.timeLabel.setText(_translate("MainWindow",
                                 self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时")))
+        self.logTextBrowser.append(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main), _translate("MainWindow", "模拟旅行"))
         self.logLabel.setText(_translate("MainWindow", "系统日志"))
         self.stateSearchLabel.setText(_translate("MainWindow", "旅客状态查询"))
@@ -424,7 +425,7 @@ class Ui_MainWindow(object):
         self.log_update(states)
         self.draw_path(self.sim.get_all_routes())
         self.timeLabel.setText(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
-        self.logTextBrowser.append(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
+        self.logTextBrowser.append(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.timer.start()
 
     # 启停定时器时的一次性定时任务
@@ -435,7 +436,7 @@ class Ui_MainWindow(object):
         self.log_update(states)
         self.draw_path(self.sim.get_all_routes())
         self.timeLabel.setText(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
-        self.logTextBrowser.append(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
+        self.logTextBrowser.append(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.timer.start()
 
     # 显示系统为旅客规划的路线
@@ -501,7 +502,7 @@ class Ui_MainWindow(object):
             state = self.sim.get_state(ID, self.time_now)
             self.animation = self.anima(state, remainingTime - 25)
             self.animation.start()
-            self.logTextBrowser.append(f"{name}(ID:{ID})开始旅行")
+            self.logTextBrowser.append(f"{name}(ID:{ID})开始旅行, 由{origin}前往{destination}")
         self.timer.singleShot(remainingTime, self.one_time_tasks)
 
     # 获取某一旅客状态的按钮被点击
