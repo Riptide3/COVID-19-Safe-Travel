@@ -23,7 +23,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 class Ui_MainWindow(object):
     def __init__(self):
-        self.update_timer = None
         self.sim = simulator.Simulator()
         self.init_timer()
 
