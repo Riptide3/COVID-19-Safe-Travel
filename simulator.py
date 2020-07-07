@@ -1,6 +1,5 @@
 import traveler
 
-
 class Simulator:
     def __init__(self):
         self.travelers = {}

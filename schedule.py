@@ -1,7 +1,14 @@
 import time
 import heapq
-import logger
+import os
+import sys
 
+def resource_path(relative_path):
+    if getattr(sys, 'frozen', False): #是否Bundle Resource
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, relative_path)
 
 class Schedule:
     def __init__(self, origin, destination, departure_time, time_limit):
@@ -15,7 +22,7 @@ class Schedule:
                           '南京': 0.5, '上海': 0.9, '西安': 0.2, '武汉': 0.9, '重庆': 0.9, '成都': 0.9, '杭州': 0.5, '兰州': 0.2}
         self.vehicle_risk = {'BUS': 2, 'TRAIN': 5, 'AIRPLANE': 9}
         self.timetable = []
-        with open(r'TimeTable.txt', 'r', encoding='utf-8') as f:
+        with open(resource_path('TimeTable.txt'), 'r', encoding='utf-8') as f:
             for line in f.readlines():
                 item = line.split()
                 self.timetable.append({'origin': item[0], 'destination': item[1],
@@ -90,7 +97,6 @@ class Schedule:
                     path[v_j] = path_v_j  # 将新路径赋值给temp
 
         t_end = time.time()
-        print('Dijkstra算法所用时间:', t_end - t_start)
         return dis, path
 
     # 获取风险值和路径

@@ -1,7 +1,28 @@
- 2020-05-09 16:56:44,841 - INFO - hahaha
- 2020-05-10 12:53:13,157 - INFO - [{'origin': '北京', 'destination': '北京', 'departure_time': 12, 'arrival_time': 12, 'risk': 0}, {'origin': '北京', 'destination': '天津', 'departure_time': 12, 'arrival_time': 14, 'type': 'BUS', 'risk': 3.6}, {'origin': '天津', 'destination': '济南', 'departure_time': 14, 'arrival_time': 17, 'type': 'BUS', 'risk': 3.0}, {'origin': '济南', 'destination': '太原', 'departure_time': 17, 'arrival_time': 18, 'type': 'AIRPLANE', 'risk': 1.8}, {'origin': '太原', 'destination': '西安', 'departure_time': 18, 'arrival_time': 22, 'type': 'BUS', 'risk': 1.6}, {'origin': '西安', 'destination': '西安', 'departure_time': 22, 'arrival_time': 23, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 23, 'arrival_time': 0, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 0, 'arrival_time': 1, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 1, 'arrival_time': 2, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 2, 'arrival_time': 3, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 3, 'arrival_time': 4, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 4, 'arrival_time': 5, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 5, 'arrival_time': 6, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '成都', 'departure_time': 6, 'arrival_time': 11, 'type': 'BUS', 'risk': 2.0}]
- 2020-05-10 12:53:13,967 - INFO - [{'origin': '济南', 'destination': '济南', 'departure_time': 12, 'arrival_time': 12, 'risk': 0}, {'origin': '济南', 'destination': '济南', 'departure_time': 12, 'arrival_time': 13, 'type': 'STAY', 'risk': 0.2}, {'origin': '济南', 'destination': '西安', 'departure_time': 13, 'arrival_time': 17, 'type': 'TRAIN', 'risk': 4.0}, {'origin': '西安', 'destination': '西安', 'departure_time': 17, 'arrival_time': 18, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '成都', 'departure_time': 18, 'arrival_time': 23, 'type': 'BUS', 'risk': 2.0}]
- 2020-05-10 12:55:58,721 - INFO - [{'origin': '北京', 'destination': '北京', 'departure_time': 12, 'arrival_time': 12, 'risk': 0}, {'origin': '北京', 'destination': '天津', 'departure_time': 12, 'arrival_time': 14, 'type': 'BUS', 'risk': 3.6}, {'origin': '天津', 'destination': '济南', 'departure_time': 14, 'arrival_time': 17, 'type': 'BUS', 'risk': 3.0}, {'origin': '济南', 'destination': '太原', 'departure_time': 17, 'arrival_time': 18, 'type': 'AIRPLANE', 'risk': 1.8}, {'origin': '太原', 'destination': '西安', 'departure_time': 18, 'arrival_time': 22, 'type': 'BUS', 'risk': 1.6}, {'origin': '西安', 'destination': '西安', 'departure_time': 22, 'arrival_time': 23, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 23, 'arrival_time': 0, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 0, 'arrival_time': 1, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 1, 'arrival_time': 2, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 2, 'arrival_time': 3, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 3, 'arrival_time': 4, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 4, 'arrival_time': 5, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 5, 'arrival_time': 6, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '成都', 'departure_time': 6, 'arrival_time': 11, 'type': 'BUS', 'risk': 2.0}]
- 2020-05-10 12:55:59,543 - INFO - [{'origin': '济南', 'destination': '济南', 'departure_time': 12, 'arrival_time': 12, 'risk': 0}, {'origin': '济南', 'destination': '济南', 'departure_time': 12, 'arrival_time': 13, 'type': 'STAY', 'risk': 0.2}, {'origin': '济南', 'destination': '西安', 'departure_time': 13, 'arrival_time': 17, 'type': 'TRAIN', 'risk': 4.0}, {'origin': '西安', 'destination': '西安', 'departure_time': 17, 'arrival_time': 18, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '成都', 'departure_time': 18, 'arrival_time': 23, 'type': 'BUS', 'risk': 2.0}]
- 2020-05-10 12:57:20,244 - INFO - [{'origin': '北京', 'destination': '北京', 'departure_time': 12, 'arrival_time': 12, 'risk': 0}, {'origin': '北京', 'destination': '天津', 'departure_time': 12, 'arrival_time': 14, 'type': 'BUS', 'risk': 3.6}, {'origin': '天津', 'destination': '济南', 'departure_time': 14, 'arrival_time': 17, 'type': 'BUS', 'risk': 3.0}, {'origin': '济南', 'destination': '太原', 'departure_time': 17, 'arrival_time': 18, 'type': 'AIRPLANE', 'risk': 1.8}, {'origin': '太原', 'destination': '西安', 'departure_time': 18, 'arrival_time': 22, 'type': 'BUS', 'risk': 1.6}, {'origin': '西安', 'destination': '西安', 'departure_time': 22, 'arrival_time': 23, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 23, 'arrival_time': 0, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 0, 'arrival_time': 1, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 1, 'arrival_time': 2, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 2, 'arrival_time': 3, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 3, 'arrival_time': 4, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 4, 'arrival_time': 5, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '西安', 'departure_time': 5, 'arrival_time': 6, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '成都', 'departure_time': 6, 'arrival_time': 11, 'type': 'BUS', 'risk': 2.0}]
- 2020-05-10 12:57:21,083 - INFO - [{'origin': '济南', 'destination': '济南', 'departure_time': 12, 'arrival_time': 12, 'risk': 0}, {'origin': '济南', 'destination': '济南', 'departure_time': 12, 'arrival_time': 13, 'type': 'STAY', 'risk': 0.2}, {'origin': '济南', 'destination': '西安', 'departure_time': 13, 'arrival_time': 17, 'type': 'TRAIN', 'risk': 4.0}, {'origin': '西安', 'destination': '西安', 'departure_time': 17, 'arrival_time': 18, 'type': 'STAY', 'risk': 0.2}, {'origin': '西安', 'destination': '成都', 'departure_time': 18, 'arrival_time': 23, 'type': 'BUS', 'risk': 2.0}]
+2020年07月08日01时
+
+2020年07月08日02时
+
+2020年07月08日03时
+12(ID:12)开始旅行, 由北京前往合肥
+12(ID:12)当前停留在北京
+
+2020年07月08日04时
+12(ID:12)当前停留在北京
+
+2020年07月08日05时
+4(ID:45)开始旅行, 由上海前往杭州
+12(ID:12)当前处于北京前往天津的汽车上
+4(ID:45)当前处于上海前往杭州的汽车上
+
+2020年07月08日06时
+12(ID:12)当前处于北京前往天津的汽车上
+4(ID:45)当前处于上海前往杭州的汽车上
+
+2020年07月08日07时
+12(ID:12)当前处于天津前往济南的汽车上
+4(ID:45)到达目的地杭州
+
+2020年07月08日08时
+12(ID:12)当前处于天津前往济南的汽车上
+
+2020年07月08日09时

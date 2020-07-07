@@ -1,6 +1,4 @@
 import schedule
-import logger
-
 
 class Traveler:
     def __init__(self, name, ID, origin, destination, departure_date, time_limit):

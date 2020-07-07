@@ -1,7 +1,6 @@
 import logging
 
-logging.basicConfig(filename=r'travel.log', level=logging.INFO, format=' %(asctime)s - %(levelname)s - %(message)s')
-
+logging.basicConfig(filename=r'travel.log', filemode='w', level=logging.INFO, format='%(message)s')
 
 def get_log(msg):
     logging.info(msg)

@@ -10,6 +10,17 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import simulator
 import datetime
+import os
+import sys
+import logger
+import threading
+
+def resource_path(relative_path):
+    if getattr(sys, 'frozen', False): #是否Bundle Resource
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, relative_path)
 
 class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
@@ -238,9 +249,9 @@ class Ui_MainWindow(object):
         self.mapLabel = QtWidgets.QLabel(self.main)
         self.mapLabel.setGeometry(QtCore.QRect(600, -3, 1130, 950))
         self.mapLabel.setText("")
-        self.mapLabel.setPixmap(QtGui.QPixmap("./images/map.png"))
+        self.mapLabel.setPixmap(QtGui.QPixmap(resource_path("./images/map.png")))
         self.mapLabel.setObjectName("mapLabel")
-
+        self.vehicleLabels = []
         self.pathLabel = QtWidgets.QLabel(self.main)
         self.pathLabel.setGeometry(QtCore.QRect(600, -3, 1130, 950))
         self.pathLabel.setText("")
@@ -400,6 +411,7 @@ class Ui_MainWindow(object):
         self.timeLabel.setText(_translate("MainWindow",
                                 self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时")))
         self.logTextBrowser.append(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
+        logger.get_log(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main), _translate("MainWindow", "模拟旅行"))
         self.logLabel.setText(_translate("MainWindow", "系统日志"))
         self.stateSearchLabel.setText(_translate("MainWindow", "旅客状态查询"))
@@ -413,7 +425,7 @@ class Ui_MainWindow(object):
         self.one_hour = datetime.timedelta(hours=1)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timed_tasks)
-        self.timer.setInterval(10 * 1000)
+        self.timer.setInterval(3 * 1000)
         self.timer.start()
 
     # 定时任务
@@ -426,6 +438,7 @@ class Ui_MainWindow(object):
         self.draw_path(self.sim.get_all_routes())
         self.timeLabel.setText(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.logTextBrowser.append(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
+        logger.get_log(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.timer.start()
 
     # 启停定时器时的一次性定时任务
@@ -437,6 +450,7 @@ class Ui_MainWindow(object):
         self.draw_path(self.sim.get_all_routes())
         self.timeLabel.setText(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.logTextBrowser.append(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
+        logger.get_log(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.timer.start()
 
     # 显示系统为旅客规划的路线
@@ -500,9 +514,10 @@ class Ui_MainWindow(object):
             self.show_route(name, ID)
             self.draw_path(self.sim.get_all_routes())
             state = self.sim.get_state(ID, self.time_now)
-            self.animation = self.anima(state, remainingTime - 25)
+            self.animation = self.anima(state, remainingTime - 50)
             self.animation.start()
             self.logTextBrowser.append(f"{name}(ID:{ID})开始旅行, 由{origin}前往{destination}")
+            logger.get_log(f"{name}(ID:{ID})开始旅行, 由{origin}前往{destination}")
         self.timer.singleShot(remainingTime, self.one_time_tasks)
 
     # 获取某一旅客状态的按钮被点击
@@ -524,6 +539,7 @@ class Ui_MainWindow(object):
                 text = f"旅客当前处于{state['origin']}前往{state['destination']}的{E2C[state['type']]}上"
             self.stateSearchTextBrowser.setText(text)
             self.logTextBrowser.append(f"查询旅客(ID:{ID})状态，" + text)
+            logger.get_log(f"查询旅客(ID:{ID})状态，" + text)
 
     # 在地图上画出路线
     def draw_path(self, routes):
@@ -548,12 +564,14 @@ class Ui_MainWindow(object):
         if len(states) > 0:
             for state in states:
                 if state['type'] == 'ARRIVAL':
-                    self.logTextBrowser.append(f"{state['name']}(ID:{state['ID']})到达目的地{state['destination']}")
+                    text = f"{state['name']}(ID:{state['ID']})到达目的地{state['destination']}"
                 elif state['type'] == 'STAY':
-                    self.logTextBrowser.append(f"{state['name']}(ID:{state['ID']})当前停留在{state['origin']}")
+                    text = f"{state['name']}(ID:{state['ID']})当前停留在{state['origin']}"
                 else:
-                    self.logTextBrowser.append(f"{state['name']}(ID:{state['ID']})当前处于"
-                                               f"{state['origin']}前往{state['destination']}的{E2C[state['type']]}上")
+                    text = (f"{state['name']}(ID:{state['ID']})当前处于{state['origin']}"
+                            f"前往{state['destination']}的{E2C[state['type']]}上")
+                self.logTextBrowser.append(text)
+                logger.get_log(text)
 
     # 交通工具移动动画
     def anima(self, state, duration):
@@ -562,7 +580,8 @@ class Ui_MainWindow(object):
         vehicleLabel.setGeometry(QtCore.QRect(600, -3, 30, 30))
         vehicleLabel.setText("")
         vehicleLabel.setObjectName("vehicleLabel")
-        vehicleLabel.setPixmap(QtGui.QPixmap("./images/" + state["type"] + ".png"))
+        vehicleLabel.setPixmap(QtGui.QPixmap(resource_path("./images/" + state["type"] + ".png")))
+        self.vehicleLabels.append(vehicleLabel)
         vehicleLabel.show()
         animation = QtCore.QPropertyAnimation(vehicleLabel, b"pos")
         if state['arrival_time'] > state['departure_time']:
@@ -582,14 +601,20 @@ class Ui_MainWindow(object):
         animation.setStartValue(start_point)
         animation.setEndValue(end_point)
         animation.setDuration(duration)
-        animation.finished.connect(lambda: vehicleLabel.hide())
         return animation
+
+    def hide_vehicleLabel(self):
+        if len(self.vehicleLabels) > 0:
+            for vehicleLabel in self.vehicleLabels:
+                vehicleLabel.hide()
+            self.vehicleLabels = []
 
     # 多旅客动画
     def vehicle_move(self, states):
+        self.hide_vehicleLabel()
         states = [s for s in states if s["type"] != "ARRIVAL"]
         if len(states) > 0:
             self.animations = QtCore.QParallelAnimationGroup()
-            for i, state in enumerate(states):
-                self.animations.addAnimation(self.anima(state, 10 * 1000 - 25))
+            for state in states:
+                self.animations.addAnimation(self.anima(state, 3 * 1000))
             self.animations.start()
