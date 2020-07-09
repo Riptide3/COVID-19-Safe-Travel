@@ -32,11 +32,18 @@ class Simulator:
     # 添加新的旅客
     def new_traveler(self, t):
         newTraveler = traveler.Traveler(t['name'], t['ID'], t['origin'], t['destination'], t['departure_date'], t['time_limit'])
-        self.travelers.update({t['ID']: newTraveler})
+        if len(newTraveler.route) > 0:
+            self.travelers.update({t['ID']: newTraveler})
+            return True
+        else:
+            return False
 
     # 根据ID获取系统为某一旅客规划出的旅行路线
     def get_plan(self, ID):
-        return self.travelers[ID].departure_date, self.travelers[ID].risk, self.travelers[ID].route
+        if ID in self.travelers.keys():
+            return self.travelers[ID].departure_date, self.travelers[ID].risk, self.travelers[ID].route
+        else:
+            return 0, 0, []
 
     # 根据ID获取某一旅客当前状态
     def get_state(self, ID, time_now):
