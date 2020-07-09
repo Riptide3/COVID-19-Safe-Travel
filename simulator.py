@@ -1,5 +1,6 @@
 import traveler
 
+
 class Simulator:
     def __init__(self):
         self.travelers = {}
@@ -31,7 +32,8 @@ class Simulator:
 
     # 添加新的旅客
     def new_traveler(self, t):
-        newTraveler = traveler.Traveler(t['name'], t['ID'], t['origin'], t['destination'], t['departure_date'], t['time_limit'])
+        newTraveler = traveler.Traveler(t['name'], t['ID'], t['origin'], t['destination'], t['departure_date'],
+                                        t['time_limit'])
         if len(newTraveler.route) > 0:
             self.travelers.update({t['ID']: newTraveler})
             return True

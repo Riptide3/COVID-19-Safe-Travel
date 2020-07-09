@@ -1,5 +1,6 @@
 import schedule
 
+
 class Traveler:
     def __init__(self, name, ID, origin, destination, departure_date, time_limit):
         self.name = name
@@ -25,10 +26,10 @@ class Traveler:
             dt = road['departure_time']
             at = road['arrival_time']
             if at >= dt:
-                for i in range(0, at-dt):
+                for i in range(0, at - dt):
                     states.append(road)
             else:
-                for i in range(0, at+(24-dt)):
+                for i in range(0, at + (24 - dt)):
                     states.append(road)
         return states
 

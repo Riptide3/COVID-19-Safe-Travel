@@ -14,13 +14,17 @@ import os
 import sys
 import logger
 
+
+# 资源文件获取
 def resource_path(relative_path):
-    if getattr(sys, 'frozen', False): #是否Bundle Resource
+    if getattr(sys, 'frozen', False):  # 是否Bundle Resource
         base_path = sys._MEIPASS
     else:
         base_path = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(base_path, relative_path)
 
+
+# 退出系统弹窗
 class MainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         result = QtWidgets.QMessageBox.question(self, '系统提示', '是否退出系统?',
@@ -36,6 +40,7 @@ class Ui_MainWindow(object):
         self.sim = simulator.Simulator()
         self.init_timer()
 
+    # UI初始化
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1800, 986)
@@ -53,7 +58,7 @@ class Ui_MainWindow(object):
         font.setPointSize(11)
         self.tabWidget.setFont(font)
         self.tabWidget.setStyleSheet("QTabBar::tab{width:100}\n"
-"QTabBar::tab{height:40}")
+                                     "QTabBar::tab{height:40}")
         self.tabWidget.setObjectName("tabWidget")
         self.main = QtWidgets.QWidget()
         self.main.setObjectName("main")
@@ -225,7 +230,7 @@ class Ui_MainWindow(object):
         font.setFamily("新宋体")
         font.setPointSize(12)
         self.hourSpin.setFont(font)
-        self.hourSpin.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.hourSpin.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.hourSpin.setMaximum(23)
         self.hourSpin.setObjectName("hourSpin")
         self.daySpin = QtWidgets.QSpinBox(self.main)
@@ -342,7 +347,7 @@ class Ui_MainWindow(object):
         font.setFamily("新宋体")
         font.setPointSize(12)
         self.stateSearchIDLabel.setFont(font)
-        self.stateSearchIDLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.stateSearchIDLabel.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         self.stateSearchIDLabel.setObjectName("stateSearchIDLabel")
         self.logGridLayout.addWidget(self.stateSearchIDLabel, 4, 0, 1, 1)
         self.stateSearchIDLineEdit = QtWidgets.QLineEdit(self.log)
@@ -397,6 +402,7 @@ class Ui_MainWindow(object):
         self.stateSearchButton.clicked.connect(self.stateSearchButton_clicked)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    # 动态翻译
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "COVID-19安全旅行模拟系统"))
@@ -484,7 +490,8 @@ class Ui_MainWindow(object):
         self.strategyRadioButton1.setText(_translate("MainWindow", "最少风险"))
         self.strategyRadioButton2.setText(_translate("MainWindow", "限时最少风险"))
         self.timeLabel.setText(_translate("MainWindow",
-                                self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时")))
+                                          self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日",
+                                                                                                h="时")))
         self.logTextBrowser.append(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         logger.get_log(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main), _translate("MainWindow", "模拟旅行"))
@@ -500,7 +507,7 @@ class Ui_MainWindow(object):
         self.one_hour = datetime.timedelta(hours=1)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timed_tasks)
-        self.timer.setInterval(3 * 1000)
+        self.timer.setInterval(10 * 1000)
         self.timer.start()
 
     # 定时任务
@@ -681,6 +688,7 @@ class Ui_MainWindow(object):
         animation.setDuration(duration)
         return animation
 
+    # 动画接续
     def hide_vehicleLabel(self):
         if len(self.vehicleLabels) > 0:
             for vehicleLabel in self.vehicleLabels:
@@ -694,5 +702,5 @@ class Ui_MainWindow(object):
         if len(states) > 0:
             self.animations = QtCore.QParallelAnimationGroup()
             for state in states:
-                self.animations.addAnimation(self.anima(state, 3 * 1000))
+                self.animations.addAnimation(self.anima(state, 10 * 1000))
             self.animations.start()

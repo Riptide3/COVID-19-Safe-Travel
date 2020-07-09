@@ -1,17 +1,20 @@
-import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtGui
 import mainwindow
 import os
 import sys
 
+
+# 资源文件获取
 def resource_path(relative_path):
-    if getattr(sys, 'frozen', False): #是否Bundle Resource
+    if getattr(sys, 'frozen', False):  # 是否Bundle Resource
         base_path = sys._MEIPASS
     else:
         base_path = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(base_path, relative_path)
 
+
+# 运行系统
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     MainWindow = mainwindow.MainWindow()
