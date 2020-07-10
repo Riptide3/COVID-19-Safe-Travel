@@ -507,7 +507,7 @@ class Ui_MainWindow(object):
         self.one_hour = datetime.timedelta(hours=1)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timed_tasks)
-        self.timer.setInterval(5 * 1000)
+        self.timer.setInterval(10 * 1000)
         self.timer.start()
 
     # 定时任务
@@ -708,5 +708,5 @@ class Ui_MainWindow(object):
         if len(states) > 0:
             self.animations = QtCore.QParallelAnimationGroup()
             for state in states:
-                self.animations.addAnimation(self.anima(state, 5 * 1000))
+                self.animations.addAnimation(self.anima(state, 10 * 1000))
             self.animations.start()
