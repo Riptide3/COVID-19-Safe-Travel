@@ -1,7 +1,6 @@
 import heapq
 import os
 import sys
-import logger
 
 
 def resource_path(relative_path):

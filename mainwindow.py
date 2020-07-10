@@ -507,7 +507,7 @@ class Ui_MainWindow(object):
         self.one_hour = datetime.timedelta(hours=1)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timed_tasks)
-        self.timer.setInterval(10 * 1000)
+        self.timer.setInterval(5 * 1000)
         self.timer.start()
 
     # 定时任务
@@ -515,24 +515,24 @@ class Ui_MainWindow(object):
         self.timer.stop()
         self.time_now += self.one_hour
         states = self.sim.get_all_states(self.time_now)
-        self.vehicle_move(states)
-        self.log_update(states)
-        self.draw_path(self.sim.get_all_routes())
         self.timeLabel.setText(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.logTextBrowser.append(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         logger.get_log(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
+        self.draw_path(self.sim.get_all_routes())
+        self.vehicle_move(states)
+        self.log_update(states)
         self.timer.start()
 
     # 启停定时器时的一次性定时任务
     def one_time_tasks(self):
         self.time_now += self.one_hour
         states = self.sim.get_all_states(self.time_now)
-        self.vehicle_move(states)
-        self.log_update(states)
-        self.draw_path(self.sim.get_all_routes())
         self.timeLabel.setText(self.time_now.strftime("%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         self.logTextBrowser.append(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
         logger.get_log(self.time_now.strftime("\n%Y{y}%m{m}%d{d}%H{h}").format(y="年", m="月", d="日", h="时"))
+        self.draw_path(self.sim.get_all_routes())
+        self.vehicle_move(states)
+        self.log_update(states)
         self.timer.start()
 
     # 显示系统为旅客规划的路线
@@ -600,8 +600,10 @@ class Ui_MainWindow(object):
                 state = self.sim.get_state(ID, self.time_now)
                 self.animation = self.anima(state, remainingTime - 50)
                 self.animation.start()
-                self.logTextBrowser.append(f"{name}(ID:{ID})开始旅行, 由{origin}前往{destination}")
-                logger.get_log(f"{name}(ID:{ID})开始旅行, 由{origin}前往{destination}")
+                self.logTextBrowser.append(f"{name}(ID:{ID})发起了请求, 开始旅行, 由{origin}前往{destination}")
+                logger.get_log(f"{name}(ID:{ID})发起了请求, 开始旅行, 由{origin}前往{destination}")
+                state.update({'name': name, 'ID': ID})
+                self.log_update([state])
             self.show_route(name, ID)
         self.timer.singleShot(remainingTime, self.one_time_tasks)
 
@@ -618,13 +620,17 @@ class Ui_MainWindow(object):
             font.setPointSize(12)
             self.stateSearchTextBrowser.setFont(font)
             E2C = {'BUS': '汽车', 'TRAIN': '火车', 'AIRPLANE': '飞机'}
-            if state['type'] == 'STAY':
-                text = f"旅客当前停留在{state['origin']}"
+            if state != None:
+                if state['type'] == 'STAY':
+                    text = f"旅客当前停留在{state['origin']}"
+                else:
+                    text = f"旅客当前处于{state['origin']}前往{state['destination']}的{E2C[state['type']]}上"
+                self.stateSearchTextBrowser.setText(text)
+                self.logTextBrowser.append(f"查询旅客(ID:{ID})状态，" + text)
+                logger.get_log(f"查询旅客(ID:{ID})状态，" + text)
             else:
-                text = f"旅客当前处于{state['origin']}前往{state['destination']}的{E2C[state['type']]}上"
-            self.stateSearchTextBrowser.setText(text)
-            self.logTextBrowser.append(f"查询旅客(ID:{ID})状态，" + text)
-            logger.get_log(f"查询旅客(ID:{ID})状态，" + text)
+                QtWidgets.QMessageBox.warning(self.centralwidget, '注意', '抱歉，您查找的旅客不存在，请检查您的输入是否有误。',
+                                              QtWidgets.QMessageBox.Ok, QtWidgets.QMessageBox.Ok)
 
     # 在地图上画出路线
     def draw_path(self, routes):
@@ -702,5 +708,5 @@ class Ui_MainWindow(object):
         if len(states) > 0:
             self.animations = QtCore.QParallelAnimationGroup()
             for state in states:
-                self.animations.addAnimation(self.anima(state, 10 * 1000))
+                self.animations.addAnimation(self.anima(state, 5 * 1000))
             self.animations.start()

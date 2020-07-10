@@ -49,6 +49,9 @@ class Simulator:
 
     # 根据ID获取某一旅客当前状态
     def get_state(self, ID, time_now):
-        time_diff = time_now - self.travelers[ID].departure_date
-        time_diff = time_diff.days * 24 + time_diff.seconds // 3600
-        return self.travelers[ID].get_state(time_diff)
+        if ID in self.travelers.keys():
+            time_diff = time_now - self.travelers[ID].departure_date
+            time_diff = time_diff.days * 24 + time_diff.seconds // 3600
+            return self.travelers[ID].get_state(time_diff)
+        else:
+            return None

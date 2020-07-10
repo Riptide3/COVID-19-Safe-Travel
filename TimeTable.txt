@@ -1,4 +1,4 @@
-北京 上海 9 11 AIRPLANE
+北京 上海 9 12 AIRPLANE
 北京 成都 8 12 AIRPLANE
 上海 西安 12 14 AIRPLANE
 武汉 成都 13 15 AIRPLANE
@@ -8,7 +8,7 @@
 上海 台北 10 13 AIRPLANE
 兰州 上海 13 17 AIRPLANE
 南京 香港 14 18 AIRPLANE
-南京 郑州 8 10 TRAIN
+天津 济南 10 11 TRAIN
 乌鲁木齐 银川 7 12 TRAIN
 成都 北京 8 14 TRAIN
 西安 银川 13 15 TRAIN
